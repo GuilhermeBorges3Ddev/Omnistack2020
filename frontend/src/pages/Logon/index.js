@@ -15,7 +15,7 @@ export default function Logon() {
                     <h1>Faça seu logon</h1>
                     <input placeholder="Sua ID" />
                     <button className="button" type="submit">Entrar</button>
-                    <Link to="/register">
+                    <Link className="back-link" to="/register">
                         <img src={LogIn} ig="LogInIcon" alt="Login Icon" />
                         Não tenho cadastro
                     </Link>
