@@ -1,12 +1,26 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import api from '../../services/api';
+
 import logoImg from '../../assets/logo.svg';
 import PowerIcon from '../../assets/power.svg';
 import TrashIcon from '../../assets/trash-2.svg';
 import './style.css';
 
 export default function Profile() {
+    const [incidents, setIncidents] = useState([]);
+    const ongId = localStorage.getItem('ongId');
     const ongName = localStorage.getItem('ongName');
+
+    useEffect(() => {
+        api.get('profile', {
+            headers: {
+                Authorization: ongId
+            }
+        }).then(response => {
+            setIncidents(response.data);
+        })
+    }, [ongId]);
 
     return (
         <div className="profile-container">
@@ -22,50 +36,24 @@ export default function Profile() {
             </header>
             <h1>Casos cadastrados</h1>
             <ul>
-                <li>
-                    <strong>CASO:</strong>
-                    <p>Caso teste</p>
-                    <strong>DESCRIÇÃO:</strong>
-                    <p>Descrição teste</p>
-                    <strong>VALOR:</strong>
-                    <p>R$ 120,00</p>
-                    <button type="button">
-                        <img src={TrashIcon} ig="TrashIcon" alt="Trash Icon" />
-                    </button>
-                </li>
-                <li>
-                    <strong>CASO:</strong>
-                    <p>Caso teste</p>
-                    <strong>DESCRIÇÃO:</strong>
-                    <p>Descrição teste</p>
-                    <strong>VALOR:</strong>
-                    <p>R$ 120,00</p>
-                    <button type="button">
-                        <img src={TrashIcon} ig="TrashIcon" alt="Trash Icon" />
-                    </button>
-                </li>
-                <li>
-                    <strong>CASO:</strong>
-                    <p>Caso teste</p>
-                    <strong>DESCRIÇÃO:</strong>
-                    <p>Descrição teste</p>
-                    <strong>VALOR:</strong>
-                    <p>R$ 120,00</p>
-                    <button type="button">
-                        <img src={TrashIcon} ig="TrashIcon" alt="Trash Icon" />
-                    </button>
-                </li>
-                <li>
-                    <strong>CASO:</strong>
-                    <p>Caso teste</p>
-                    <strong>DESCRIÇÃO:</strong>
-                    <p>Descrição teste</p>
-                    <strong>VALOR:</strong>
-                    <p>R$ 120,00</p>
-                    <button type="button">
-                        <img src={TrashIcon} ig="TrashIcon" alt="Trash Icon" />
-                    </button>
-                </li>
+               {incidents.map(incident => (
+                    <li key={incident.id}>
+                        <strong>CASO:</strong>
+                        <p>{incident.title}</p>
+                        <strong>DESCRIÇÃO:</strong>
+                        <p>{incident.description}</p>
+                        <strong>VALOR:</strong>
+                        <p>
+                            {Intl.NumberFormat('pt-BR', { 
+                                style: 'currency', 
+                                currency: 'BRL'
+                            }).format(incident.value)}
+                        </p>
+                        <button type="button">
+                            <img src={TrashIcon} ig="TrashIcon" alt="Trash Icon" />
+                        </button>
+                    </li>
+               ))}
             </ul>
         </div>
     )
