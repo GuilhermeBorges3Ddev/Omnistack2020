@@ -43,7 +43,7 @@ export default function Incidens() {
 
     useEffect(() => {
         loadIncidents();
-    }, [input])
+    }, [])
 
     return (
         <View style={styles.container}>
